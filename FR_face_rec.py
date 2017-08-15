@@ -6,6 +6,7 @@ import pickle
 pkl_file = open('data.pkl', 'rb')
 
 data = pickle.load(pkl_file)
+# print data
 
 pkl_file.close()
 
@@ -18,7 +19,7 @@ def judge(list):
             True_num += 1
         else:
             pass
-    if True_num / length > 0.5:
+    if True_num / length >= 0.5:
         return True
     else:
         return False
@@ -37,15 +38,12 @@ process_this_frame = True
 while True:
     # Grab a single frame of video
     ret, frame = video_capture.read()
-    # print ret
-
-    # Resize frame of video to 1/4 size for faster face recognition processing
-    # small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
 
     # Only process every other frame of video to save time
     if process_this_frame:
         # Find all the faces and face encodings in the current frame of video
         face_locations = face_recognition.face_locations(frame)
+        print len(face_locations)
         face_encodings = face_recognition.face_encodings(frame, face_locations)
 
         face_names = []
@@ -54,24 +52,23 @@ while True:
             for name in data:
                 feature_list = data[name]
                 # print feature_list
-                match = face_recognition.compare_faces(feature_list, face_encoding,tolerance=0.5)
+                match = face_recognition.compare_faces(feature_list, face_encoding,tolerance=0.4)
 
-                if judge(match):
+                if judge(match) == True:
                     print name
-                    face_names.append(name)
-                # else:
+                    # face_names.append(name)
+                # if judge(match) == False:
                     # print 'Unknow'
-                    # face_names.append('Unknow')
 
-        # Display the results
-        for (top, right, bottom, left), name in zip(face_locations, face_names):
-            # Draw a box around the face
-            cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-
-            # Draw a label with a name below the face
-            cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255))
-            font = cv2.FONT_HERSHEY_DUPLEX
-            cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+        # # Display the results
+        # for (top, right, bottom, left), name in zip(face_locations, face_names):
+        #     # Draw a box around the face
+        #     cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+        #
+        #     # Draw a label with a name below the face
+        #     cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255))
+        #     font = cv2.FONT_HERSHEY_DUPLEX
+        #     cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
 
     # Display the resulting image
     cv2.imshow('Video', frame)

@@ -6,7 +6,7 @@ import numpy as np
 cap = cv2.VideoCapture(0)
 c = 1
 timeF = 2
-name = 'zts'
+name = 'tsy'
 path = './data/' + name
 
 if not os.path.isdir(path):
