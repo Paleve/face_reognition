@@ -56,7 +56,5 @@ def hello():
             if judge(match) == True:
                 return name
 
-    return  'is face %s' % imgbase64
-
 if __name__ == '__main__':
     app.run(host=HOST, port=PORT)
