@@ -44,5 +44,4 @@ output = open('data.pkl', 'wb')
 # Pickle dictionary using protocol 0.
 pickle.dump(data, output)
 
-
 output.close()

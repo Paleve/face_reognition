@@ -2,7 +2,6 @@ import cv2
 import os
 import numpy as np
 
-
 cap = cv2.VideoCapture(0)
 c = 1
 timeF = 2

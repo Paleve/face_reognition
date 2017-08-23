@@ -2,18 +2,20 @@ from __future__ import division
 
 from flask import Flask, request
 import face_recognition
+from base64 import b64encode
 import cv2
 import base64
 import pickle
 app = Flask(__name__)
 
-PORT = 6065
-HOST = '127.0.0.1'
+PORT = 6070
+HOST = '0.0.0.0'
 IMAGE_NAME = 'save.jpg'
 pkl_file = open('data.pkl', 'rb')
+ENCODING = 'utf-8'
 
 data = pickle.load(pkl_file)
-print data
+# print data
 
 pkl_file.close()
 
@@ -33,9 +35,11 @@ def judge(list):
 
 @app.route('/')
 def hello():
-    imgbase64 = request.args.get('imgbase64')
+    base64_bytes = request.args.get('img')
 
-    image_data = base64.b64decode(imgbase64)
+    # return 'conneted receive %s' % base64_bytes
+
+    image_data = base64.b64decode(base64_bytes.replace(' ','+'))
 
     with open(IMAGE_NAME, 'wb') as jpg_file:
         jpg_file.write(image_data)
@@ -43,7 +47,7 @@ def hello():
     frame = cv2.imread(IMAGE_NAME)
 
     face_locations = face_recognition.face_locations(frame)
-    print len(face_locations)
+
     face_encodings = face_recognition.face_encodings(frame, face_locations)
 
     for face_encoding in face_encodings:
@@ -55,6 +59,10 @@ def hello():
 
             if judge(match) == True:
                 return name
+            else:
+                return 'Unknow'
 
 if __name__ == '__main__':
     app.run(host=HOST, port=PORT)
+
+
